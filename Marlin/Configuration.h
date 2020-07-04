@@ -21,6 +21,67 @@
  */
 #pragma once
 
+//linanw added Macros for firmware version string.
+//#define PLUS
+//#define MINI
+//#define DUAL_EXTRUSION
+//#define DW_EXTRUDER_GEN1
+//#define NO_AUTO_FAN
+//#define MAX_TEMP_OVERRIDE
+#define E1_REPLACE_E0
+#define SILENT_HOMING
+#define SS_FIRMWARE_NUMBERS "20200702.1"
+#define CHS_LCD
+
+#ifdef PLUS
+  #define PLUS_TEXT ".PLUS"
+#else
+  #define PLUS_TEXT ""
+#endif // PLUS
+#ifdef MINI
+  #define MINI_TEXT ".MINI"
+#else
+  #define MINI_TEXT ""
+#endif // MINI
+#ifdef DUAL_EXTRUSION
+  #define DUAL_EXTRUSION_TEXT ".DUAL"
+#else
+  #define DUAL_EXTRUSION_TEXT ""
+#endif // DUAL_EXTRUSION
+#ifdef DW_EXTRUDER_GEN1
+  #define DW_EXTRUDER_GEN1_TEXT ".DWE1"
+#else
+  #define DW_EXTRUDER_GEN1_TEXT ""
+#endif // DW_EXTRUDER_GEN1
+#ifdef NO_AUTO_FAN
+  #define NO_AUTO_FAN_TEXT ".NO_AUTO_FAN"
+#else
+  #define NO_AUTO_FAN_TEXT ""
+#endif // NO_AUTO_FAN
+#ifdef MAX_TEMP_OVERRIDE
+  #define MAX_TEMP_OVERRIDE_TEXT ".MAX_TEMP_275"
+#else
+  #define MAX_TEMP_OVERRIDE_TEXT ""
+#endif // MAX_TEMP_OVERRIDE
+#ifdef E1_REPLACE_E0
+  #define E1_REPLACE_E0_TEXT ".E1_REPLACE_E0"
+#else
+  #define E1_REPLACE_E0_TEXT ""
+#endif // E1_REPLACE_E0
+#ifdef SILENT_HOMING
+  #define SILENT_HOMING_TEXT ".SILENT_HOMING"
+#else
+  #define SILENT_HOMING_TEXT ""
+#endif // SILENT_HOMING
+#ifdef CHS_LCD
+  #define CHS_LCD_TEXT ".CHS_LCD"
+#else
+  #define CHS_LCD_TEXT ""
+#endif // CHS_LCD
+
+#define SS_FIRMWARE_VERSION SS_FIRMWARE_NUMBERS PLUS_TEXT DUAL_EXTRUSION_TEXT DW_EXTRUDER_GEN1_TEXT NO_AUTO_FAN_TEXT MAX_TEMP_OVERRIDE_TEXT E1_REPLACE_E0_TEXT SILENT_HOMING_TEXT CHS_LCD_TEXT
+//end linanw
+
 /**
  * Configuration.h
  *
@@ -71,7 +132,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(none, default config)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "linanw" // Who made the changes.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -142,8 +203,15 @@
 
 // This defines the number of extruders
 // :[1, 2, 3, 4, 5, 6, 7, 8]
-#define EXTRUDERS 2
+#ifdef E1_REPLACE_E0  // linanw added
 
+#define EXTRUDERS 1
+
+#else
+
+#define EXTRUDERS 2 // linanw: original value
+
+#endif
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
 #define DEFAULT_NOMINAL_FILAMENT_DIA 2.85
 
@@ -407,7 +475,18 @@
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
 #define TEMP_SENSOR_0 20
+
+#ifdef E1_REPLACE_E0  // linanw added
+
+#define TEMP_SENSOR_1 0
+
+#else
+
 #define TEMP_SENSOR_1 20
+
+
+#endif
+
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
@@ -470,6 +549,7 @@
 #define BANG_MAX 255     // Limits current to nozzle while in bang-bang mode; 255=full current
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
+// #define PID_K1 0.99      // linanw: SS_UM value
 #if ENABLED(PIDTEMP)
   //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
   //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
@@ -483,17 +563,17 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  // Ultimaker2+
+  // Ultimaker2+ // linanw orginal value
 
-#define DEFAULT_Kp 9.74
-#define DEFAULT_Ki 0.69
-#define DEFAULT_Kd 34.32
+  // #define DEFAULT_Kp 9.74
+  // #define DEFAULT_Ki 0.69
+  // #define DEFAULT_Kd 34.32
 
-  /*
-  #define  DEFAULT_Kp 10.03
-  #define  DEFAULT_Ki 1.50
-  #define  DEFAULT_Kd 70.0
-  */
+  // Ultimaker2 JarJar // linanw: SS_UM value
+
+#define  DEFAULT_Kp 10.03
+#define  DEFAULT_Ki 1.50
+#define  DEFAULT_Kd 70.0
 
   //#define DEFAULT_Kp 22.2
   //#define DEFAULT_Ki 1.08
@@ -741,7 +821,8 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 200, 355 }
+// #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 200, 355 } // linanw: original value
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 369 } // linanw: changed for Z-Axis 16 micro-steps with 400, 369 is default for UM2.1_JarJar
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -761,7 +842,8 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
+#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 } // linanw: original value
+#define DEFAULT_MAX_ACCELERATION      { 9000, 9000, 100, 10000 } // linanw: default for UM2.1_JarJar
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1074,8 +1156,8 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR true
-#define INVERT_E1_DIR true
+#define INVERT_E0_DIR false // linanw: changed
+#define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
 #define INVERT_E4_DIR false
@@ -1103,8 +1185,8 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 220
-#define Y_BED_SIZE 220
+#define X_BED_SIZE 230 // linanw: changed from 220
+#define Y_BED_SIZE 224.5 // linanw: changed from 220
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -1112,7 +1194,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 300
+#define Z_MAX_POS 325 // linanw: changed from 300
 
 /**
  * Software Endstops
@@ -1376,7 +1458,11 @@
 
 // Homing speeds (mm/m)
 #define HOMING_FEEDRATE_XY (100*60)
+#ifdef SILENT_HOMING // linanw added
+#define HOMING_FEEDRATE_Z  (24*60)
+#else
 #define HOMING_FEEDRATE_Z  (40*60)
+#endif
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
@@ -1453,11 +1539,11 @@
  *   M501 - Read settings from EEPROM. (i.e., Throw away unsaved changes)
  *   M502 - Revert settings to "factory" defaults. (Follow with M500 to init the EEPROM.)
  */
-//#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
+#define EEPROM_SETTINGS     // linanw uncommented this line // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of PROGMEM. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save PROGMEM.
 #if ENABLED(EEPROM_SETTINGS)
-  //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
+  #define EEPROM_AUTO_INIT  // linanw uncommented // Init EEPROM automatically on any errors.
 #endif
 
 //
@@ -1626,7 +1712,16 @@
  *
  * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cz':'Czech', 'da':'Danish', 'de':'German', 'el':'Greek', 'el_gr':'Greek (Greece)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'gl':'Galician', 'hr':'Croatian', 'it':'Italian', 'jp_kana':'Japanese', 'ko_KR':'Korean (South Korea)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt_br':'Portuguese (Brazilian)', 'ru':'Russian', 'sk':'Slovak', 'tr':'Turkish', 'uk':'Ukrainian', 'vi':'Vietnamese', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Traditional)', 'test':'TEST' }
  */
+
+#ifdef CHS_LCD  // linanw added
+
 #define LCD_LANGUAGE en
+
+#else
+
+#define LCD_LANGUAGE zh_CN
+
+#endif
 
 /**
  * LCD Character Set

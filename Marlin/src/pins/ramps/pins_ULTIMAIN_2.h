@@ -63,6 +63,18 @@
 #define Z_DIR_PIN                             36
 #define Z_ENABLE_PIN                          34
 
+#ifdef E1_REPLACE_E0  // linanw added
+
+#define E0_STEP_PIN                           49
+#define E0_DIR_PIN                            47
+#define E0_ENABLE_PIN                         48
+
+// #define E1_STEP_PIN                           42
+// #define E1_DIR_PIN                            43
+// #define E1_ENABLE_PIN                         37
+
+#else
+
 #define E0_STEP_PIN                           42
 #define E0_DIR_PIN                            43
 #define E0_ENABLE_PIN                         37
@@ -70,6 +82,8 @@
 #define E1_STEP_PIN                           49
 #define E1_DIR_PIN                            47
 #define E1_ENABLE_PIN                         48
+
+#endif                  // linanw added end
 
 #define MOTOR_CURRENT_PWM_XY_PIN              44
 #define MOTOR_CURRENT_PWM_Z_PIN               45
